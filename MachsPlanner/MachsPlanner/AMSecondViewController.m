@@ -25,6 +25,9 @@
 @synthesize googleResultTable = _googleResultTable;
 @synthesize googleResponseArray = _googleResponseArray;
 @synthesize popupMenu = _popupMenu;
+@synthesize destLatitude = _destLatitude;
+@synthesize destLongitude = _destLongitude;
+@synthesize destionationTitle = _destionationTitle;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -35,7 +38,7 @@
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     firstLaunch=YES;
-    [self performSelector:@selector(moveToCurrentLocation) withObject:nil afterDelay:1];
+    [self performSelector:@selector(moveToCurrentLocation) withObject:nil afterDelay:.5];
     
     for (UIView *view in placeSearchBar.subviews){
         if ([view isKindOfClass: [UITextField class]]) {
@@ -45,7 +48,6 @@
         }
     }
 }
-
 
 - (void)moveToCurrentLocation{
     CLLocationCoordinate2D userLocation = CLLocationCoordinate2DMake(latitude,longitude);
@@ -122,22 +124,22 @@
     if ([popupItem.title isEqualToString:@"Public Transport"]) 
     {
         double seconds = [NSDate timeIntervalSinceReferenceDate];
-        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&departure_time=%0.0f&mode=transit",latitude,longitude,destLatitude,destLongitude,seconds];
+        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&departure_time=%0.0f&mode=transit",latitude,longitude,_destLatitude,_destLongitude,seconds];
         appDelegate.travelMode = @"r";
         
     }
     else if ([popupItem.title isEqualToString:@"Walking"]) {
-        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=walking",latitude,longitude,destLatitude,destLongitude];
+        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=walking",latitude,longitude,_destLatitude,_destLongitude];
         appDelegate.travelMode = @"w";
     }
-    else if ([popupItem.title isEqualToString:@"Driving"]) {
-        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=driving",latitude,longitude,destLatitude,destLongitude];
-    }
     else if ([popupItem.title isEqualToString:@"Biking"]) {
-        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=bicycling",latitude,longitude,destLatitude,destLongitude];
+        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=bicycling",latitude,longitude,_destLatitude,_destLongitude];
         appDelegate.travelMode = @"b";
         
         
+    }
+    else if ([popupItem.title isEqualToString:@"Driving"]){
+        urlString = [NSMutableString stringWithFormat:@"http://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&sensor=true&mode=driving",latitude,longitude,_destLatitude,_destLongitude];
     }
     
     
@@ -162,8 +164,8 @@
     [self createPopupMenu];
     [self.popupMenu showInView:self.planMapView atPoint:CGPointMake(mapView.center.x, view.frame.origin.y)];
 
-    destLatitude = view.annotation.coordinate.latitude;
-    destLongitude = view.annotation.coordinate.longitude;    
+    _destLatitude = view.annotation.coordinate.latitude;
+    _destLongitude = view.annotation.coordinate.longitude;    
     
 }
 - (void)createPopupMenu{
@@ -449,7 +451,7 @@
             placeCoord.latitude = [[[[resultDict objectForKey:@"geometry"] objectForKey:@"location"]objectForKey:@"lat"] doubleValue];
             NSString *address = [NSString stringWithFormat:@"%@",[resultDict objectForKey:@"formatted_address"]];
             
-            MapPoint *placeObject = [[MapPoint alloc] initWithName:@"The found location! " address:address coordinate:placeCoord];
+            MapPoint *placeObject = [[MapPoint alloc] initWithName:(_destionationTitle)?:@"The found location! " address:address coordinate:placeCoord];
             foundLocation = placeCoord;
             [self.planMapView addAnnotation:placeObject];
             
@@ -468,11 +470,11 @@
             NSArray *legRouteArray = [resultDict objectForKey:@"legs"];
             NSString *distance = [NSString stringWithFormat:@"%@",[[[legRouteArray objectAtIndex:0] objectForKey:@"distance"] objectForKey:@"text"]];
             NSString *howLong = [NSString stringWithFormat:@"%@",[[[legRouteArray objectAtIndex:0] objectForKey:@"duration"] objectForKey:@"text"]];
-            NSArray *stepArray = [[legRouteArray objectAtIndex:0] objectForKey:@"steps"];
             AMDirectionViewController *directionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AMDirectionViewController"];
+            directionVC.destionationTitle = _destionationTitle; 
             [directionVC passDistance:distance duration:howLong routeArray:legRouteArray];
             [self presentViewController:directionVC animated:YES completion:^{
-                [SVProgressHUD dismiss];
+            [SVProgressHUD dismiss];
             }];
             break;
         }
@@ -585,7 +587,6 @@
 
 - (IBAction)trackinguserLocation_onClicked:(id)sender {
     [self moveToCurrentLocation];
-    
 }
 
 @end

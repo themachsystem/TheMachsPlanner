@@ -21,6 +21,7 @@
 @synthesize routeTableView = _routeTableView;
 @synthesize distance = _distance;
 @synthesize duration = _duration;
+@synthesize destionationTitle = _destionationTitle;
 @synthesize routeArray = _routeArray;
 @synthesize routeInstructionArray = _routeInstructionArray;
 
@@ -128,7 +129,7 @@
     currPlace.longitude = fromLongitude;
     
     Place* destionation =[[Place alloc] init];
-    destionation.name = @"Destination";
+    destionation.name = (_destionationTitle)?:@"Destination";
     destionation.description = toDescription;
     destionation.latitude = toLatitude;
     destionation.longitude = toLongitude;

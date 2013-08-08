@@ -19,9 +19,9 @@ typedef enum
 
 @interface AMSecondViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate,UISearchBarDelegate,NSURLConnectionDelegate,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     CLLocationManager *locationManager;
-    float longitude, latitude, destLatitude, destLongitude;
     CLLocationCoordinate2D currentCentre;
     CLLocationCoordinate2D foundLocation;
+    float longitude,latitude;
     int currenDist;
     UIButton *prevBtnClicked;
     BOOL firstLaunch;
@@ -36,6 +36,12 @@ typedef enum
 @property (nonatomic, strong) UITableView *googleResultTable;
 @property (nonatomic, strong) NSMutableArray *googleResponseArray;
 @property (nonatomic, strong) QBPopupMenu *popupMenu;
+@property (nonatomic) float destLatitude;
+@property (nonatomic) float destLongitude;
+@property (strong, nonatomic) NSString *destionationTitle;
+
+- (void)getDirections:(id)sender;
+- (void) searchCoordinatesForAddress:(NSString *)inAddress;
 
 - (IBAction)googlePlace_onClicked:(id)sender;
 - (IBAction)trackinguserLocation_onClicked:(id)sender;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3381.3" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="TBLCategories" representedClassName="TBLCategories" syncable="YES">
+        <attribute name="colCategoryDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="colCategoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="colIdCategories" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="photos" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TBLPhotos" inverseName="categories" inverseEntity="TBLPhotos" syncable="YES"/>
+        <relationship name="placeLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TBLPlaceLocation" inverseName="categories" inverseEntity="TBLPlaceLocation" syncable="YES"/>
+    </entity>
+    <entity name="TBLPhotos" representedClassName="TBLPhotos" syncable="YES">
+        <attribute name="colIdCategories" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="colIdPhotos" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="colPlaceUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="categories" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TBLCategories" inverseName="photos" inverseEntity="TBLCategories" syncable="YES"/>
+    </entity>
+    <entity name="TBLPlaceLocation" representedClassName="TBLPlaceLocation" syncable="YES">
+        <attribute name="colAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="colIdCategories" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="colIdPlaceLocation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="colLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="colLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="colPlaceInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="colPlaceName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="categories" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TBLCategories" inverseName="placeLocation" inverseEntity="TBLCategories" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="TBLCategories" positionX="108" positionY="126" width="128" height="118"/>
+        <element name="TBLPlaceLocation" positionX="297" positionY="-36" width="128" height="163"/>
+        <element name="TBLPhotos" positionX="385" positionY="225" width="128" height="103"/>
+    </elements>
+</model>

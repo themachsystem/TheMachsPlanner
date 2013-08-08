@@ -8,7 +8,10 @@
 
 #import "AMFirstViewController.h"
 #import "AMInformationViewController.h"
-@interface AMFirstViewController ()
+#import "AMCoreDataManager.h"
+@interface AMFirstViewController (){
+    NSManagedObjectContext *context;
+}
 
 @end
 
@@ -16,17 +19,26 @@
 @synthesize menuTableView = _menuTableView;
 @synthesize menuArray = _menuArray;
 @synthesize placeInfoArray = _placeInfoArray;
+@synthesize categoryArray = _categoryArray;
+@synthesize placeLocationArray = _placeLocationArray;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _categoryArray = [[AMCoreDataManager shareManager]fetchAllCategories];
+    _placeLocationArray = [[AMCoreDataManager shareManager]fetchPlaceLocationAndDescription];
     self.navigationItem.backBarButtonItem =[[UIBarButtonItem alloc] initWithTitle:@"Back"
                                                                             style:UIBarButtonItemStyleBordered
                                                                            target:nil
                                                                            action:nil];
     [_menuTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    _menuArray = [[NSArray alloc] initWithObjects:@"Sydney's Parks & Gardens",@"Places of Worship in Sydney",@"Shopping in Sydney",@"Museums & Galleries",@"Sydney Opera House",@"Sydney Harbour Bridge", nil];
-    NSString * tempDictPath = [[NSBundle mainBundle] pathForResource:@"PlaceInfoDetail" ofType:@"plist"];
-    _placeInfoArray = [NSArray arrayWithContentsOfFile:tempDictPath];
+    _menuArray = [[NSMutableArray alloc] init];
+    _placeInfoArray = [[NSMutableArray alloc] init];
+    for (TBLCategories *category in _categoryArray) {
+        [_menuArray addObject:category.colCategoryName];
+        [_placeInfoArray addObject:category.colCategoryDescription];
+    }
+    ;
+
 }
 - (void)didReceiveMemoryWarning
 {
@@ -72,22 +84,11 @@
 }
 
 - (NSArray*)filterPlaceOfInterestWithIndex:(int)index{
-    NSArray *placeOfInterest;
-    switch (index) {
-        case 0:
-            placeOfInterest= [NSArray arrayWithObjects:@"Royal Botanic Gardens",@"Hyde Park",@"Centennial Park",@"Cook & Phillip Park",@"The Domain",@"The Chinese Garden of Friendship", nil];
-            break;
-        case 1:
-            placeOfInterest= [NSArray arrayWithObjects:@"The Great Synagogue",@"St Marys Cathedral",@"St James",@"St Andrew's Cathedral",@"St Philip's",nil];
-            break;
-        case 2:
-            placeOfInterest= [NSArray arrayWithObjects:@"The Queen Victoria Building",@"The Strand Arcade",@"Skygarden", nil];
-            break;
-        case 3:
-            placeOfInterest= [NSArray arrayWithObjects:@"Art Gallery of NSW",@"Australian Museum",@"Justice and Police Museum",@"Museum of Contemporary Art",@"Museum of Sydney",@"Australian National Maritime Museum",@"Hyde Park Barracks Museum",@"Powerhouse Museum",@"SH Ervin Gallery",@"Sydney Jewish Museum", nil];
-            break;
-        default:
-            break;
+    NSMutableArray *placeOfInterest = [[NSMutableArray alloc] init];
+    for (TBLPlaceLocation *placeLocation in _placeLocationArray) {
+        if (placeLocation.colIdCategories==index+1) {
+            [placeOfInterest addObject:placeLocation];
+        }
     }
     return placeOfInterest;
 }

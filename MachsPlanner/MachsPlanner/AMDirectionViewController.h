@@ -26,6 +26,7 @@
 @property (nonatomic,strong) NSArray *routeArray;
 @property (nonatomic,strong) NSString *distance;
 @property (nonatomic,strong) NSString *duration;
+@property (nonatomic,strong) NSString *destionationTitle;
 @property (nonatomic,strong) NSMutableArray *routeInstructionArray;
 
 - (void)passDistance:(NSString*)distance duration:(NSString*)duration routeArray:(NSArray*)array;

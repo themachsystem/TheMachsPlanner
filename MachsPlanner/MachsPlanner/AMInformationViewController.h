@@ -9,9 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "QBPopupMenu.h"
 
-@interface AMInformationViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface AMInformationViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIWebViewDelegate>{
+    int indexOfRowSelected;
+    UIButton *backBtn;
+}
 
-@property (strong, nonatomic) IBOutlet UITextView *informationTextView;
+@property (strong, nonatomic) IBOutlet UIWebView *informationWebview;
+@property (strong, nonatomic) UIWebView *placeInfoWebview;
 @property (strong, nonatomic) NSString *placeInfoString;
 @property (strong, nonatomic) NSString *titleHeader;
 @property (strong, nonatomic) NSArray *listOfPlaces;
